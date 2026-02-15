@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import rough from 'roughjs/bin/rough';
 import type { ElementsTypes, drawingBoardElements } from '../type/element'
 
-const Canvas = () => {
+interface CanvCanvasProps {
+    selectedTool: ElementsTypes
+}
+
+const Canvas = ({ selectedTool }: CanvCanvasProps) => {
     //Canvas DOM 元素
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -13,7 +17,7 @@ const Canvas = () => {
     const [drawingElement, setDrawingElement] = useState<drawingBoardElements | null>(null)
 
     //选取的工具
-    const [selectedTool, setSelectedTool] = useState<ElementsTypes>('rectangle')
+    //const [selectedTool, setSelectedTool] = useState<ElementsTypes>('rectangle')
 
     //初始化画笔
     useEffect(() => {
@@ -84,10 +88,29 @@ const Canvas = () => {
             width,
             height
         })
-
     }
 
-    return <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight}></canvas>
+    //结束绘制
+    const handleMouseUp = () => {
+        if (drawingElement) {
+            if (Math.abs(drawingElement.width) > 5 || Math.abs(drawingElement.height) > 5) {
+                setElements((prev) => [...prev, drawingElement])
+            }
+            setDrawingElement(null)
+        }
+    }
+
+    return (
+        <canvas
+            ref={canvasRef}
+            width={window.innerWidth}
+            height={window.innerHeight}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            style={{ border: '1px solid #eee', display: 'block', backgroundColor: '#fff' }}>
+        </canvas>
+    )
 }
 
 export default Canvas
