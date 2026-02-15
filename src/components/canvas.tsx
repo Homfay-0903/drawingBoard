@@ -13,7 +13,7 @@ const Canvas = () => {
     const [drawingElement, setDrawingElement] = useState<drawingBoardElements | null>(null)
 
     //选取的工具
-    const [selectedTool, setSelectedTool] = useState<ElementsTypes | null>(null)
+    const [selectedTool, setSelectedTool] = useState<ElementsTypes>('rectangle')
 
     //初始化画笔
     useEffect(() => {
@@ -53,6 +53,39 @@ const Canvas = () => {
             }
         }
     }, [elements, drawingElement])
+
+    //鼠标按下：开始画图
+    const handleMouseDown = (e: React.MouseEvent) => {
+        const { clientX, clientY } = e
+
+        const newElement: drawingBoardElements = {
+            id: Math.random().toString(36).substr(2, 9),
+            type: selectedTool,
+            x: clientX,
+            y: clientY,
+            width: 0,
+            height: 0,
+            roughness: 2.5
+        }
+
+        setDrawingElement(newElement)
+    }
+
+    //鼠标移动
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!drawingElement) return
+
+        const { clientX, clientY } = e
+        const width = clientX - drawingElement.x
+        const height = clientY - drawingElement.y
+
+        setDrawingElement({
+            ...drawingElement,
+            width,
+            height
+        })
+
+    }
 
     return <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight}></canvas>
 }

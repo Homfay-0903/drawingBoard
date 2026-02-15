@@ -1,7 +1,7 @@
 export type ElementsTypes = 'rectangle' | 'line' | 'text'
 
 interface BaseElements {
-    id: number
+    id: string
     type: ElementsTypes
     x: number
     y: number
