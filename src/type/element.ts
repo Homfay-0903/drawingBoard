@@ -1,5 +1,7 @@
 export type ElementsTypes = 'rectangle' | 'line' | 'text'
 
+export type LinesTypes = 'arrow' | 'line'
+
 interface BaseElements {
     id: string
     type: ElementsTypes
@@ -12,4 +14,9 @@ interface BaseElements {
     stroke?: number
 }
 
-export type drawingBoardElements = BaseElements
+interface LineElements extends BaseElements {
+    type: 'line',
+    lineShape?: LinesTypes
+}
+
+export type drawingBoardElements = BaseElements | LineElements
