@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import rough from 'roughjs/bin/rough';
-import type { ElementsTypes, drawingBoardElements } from '../type/element'
+import type { ElementsTypes, LinesTypes, drawingBoardElements } from '../type/element'
 
 interface CanvCanvasProps {
     selectedTool: ElementsTypes
@@ -23,15 +23,17 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
     useEffect(() => {
         const canvas = canvasRef.current
         if (!canvas) return
+
         const ctx = canvas.getContext('2d')
         if (!ctx) return
 
         //清空画布
         ctx.clearRect(0, 0, canvas.width, canvas.height)
+        //创建画笔
+        const rc = rough.canvas(canvas)
 
         //先绘制所有已固化的图形
         elements.forEach((element) => {
-            const rc = rough.canvas(canvas)
             if (element.type === 'rectangle') {
                 rc.draw(
                     rc.rectangle(element.x, element.y, element.width, element.height, {
@@ -39,14 +41,14 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
                         stroke: '#000'
                     })
                 )
+            } else if (element.type === 'line') {
+                const x1 = element.x
+                const x2 = element.y
             }
-
-            //todo 线条
         })
 
         //再画正在画的图形（预览）
         if (drawingElement) {
-            const rc = rough.canvas(canvas)
             if (drawingElement.type === 'rectangle') {
                 rc.draw(
                     rc.rectangle(drawingElement.x, drawingElement.y, drawingElement.width, drawingElement.height, {
@@ -98,6 +100,45 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
             }
             setDrawingElement(null)
         }
+    }
+
+    //画箭头线
+    const drawArrow = (
+        ctx: CanvasRenderingContext2D,
+        fromX: number,
+        fromY: number,
+        toX: number,
+        toY: number,
+        color: string
+    ) => {
+        ctx.strokeStyle = color
+        ctx.fillStyle = color
+        ctx.lineWidth = 1
+
+        //计算线的长度和角度
+        const headLen = 10 //箭头长度
+        const angle = Math.atan2(toY - fromY, toX - fromX)
+
+        //画线
+        ctx.beginPath()
+        ctx.moveTo(fromX, fromY)
+        ctx.lineTo(toX - headLen * Math.cos(angle), toY - headLen * Math.sin(angle))
+        ctx.stroke()
+
+        //画箭头
+        ctx.beginPath()
+        ctx.moveTo(toX, toY)
+        ctx.lineTo(
+            toX - headLen * Math.cos(angle - Math.PI / 6),
+            toY - headLen * Math.sin(angle - Math.PI / 6)
+        )
+        ctx.lineTo(
+            toX - headLen * Math.cos(angle + Math.PI / 6),
+            toY - headLen * Math.sin(angle + Math.PI / 6)
+        )
+
+        ctx.closePath()
+        ctx.fill()
     }
 
     return (
