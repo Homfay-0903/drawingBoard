@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import Canvas from './components/canvas'
-import type { ToolsTypes } from './type/element'
+import type { ToolsTypes, LinesTypes } from './type/element'
 
 function App() {
   const [tool, setTool] = useState<ToolsTypes>('rectangle')
+  const [lineShape, setLineShape] = useState<LinesTypes>('line')
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -14,15 +15,25 @@ function App() {
         >
           画矩形
         </button>
-        <button
-          onClick={() => setTool('line')}
-          style={{ fontWeight: tool === 'line' ? 'bold' : 'normal' }}
-        >
-          画线条
-        </button>
+
+        {/* 线条工具组 */}
+        <span style={{ margin: '0 10px' }}>
+          <button
+            onClick={() => { setTool('line'); setLineShape('arrow') }}
+            style={{ fontWeight: lineShape === 'line' ? 'normal' : 'bold' }}
+          >
+            箭头线
+          </button>
+          <button
+            onClick={() => { setTool('line'); setLineShape('line') }}
+            style={{ fontWeight: lineShape === 'line' ? 'bold' : 'normal' }}
+          >
+            手绘线
+          </button>
+        </span>
       </div>
 
-      <Canvas selectedTool={tool}></Canvas>
+      <Canvas selectedTool={tool} lineShape={lineShape}></Canvas>
     </div>
   )
 }

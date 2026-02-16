@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import rough from 'roughjs/bin/rough';
-import type { ToolsTypes, LinesTypes, drawingBoardElements } from '../type/element'
+import type { ToolsTypes, drawingBoardElements } from '../type/element'
 
 interface CanvCanvasProps {
     selectedTool: ToolsTypes
+    lineShape: 'line' | 'arrow'
 }
 
 const Canvas = ({ selectedTool }: CanvCanvasProps) => {
@@ -60,6 +61,12 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
 
         //再画正在画的图形（预览）
         if (drawingElement) {
+            const x1 = drawingElement.x
+            const y1 = drawingElement.y
+            const x2 = drawingElement.x + drawingElement.width
+            const y2 = drawingElement.y + drawingElement.height
+
+
             if (drawingElement.type === 'rectangle') {
                 rc.draw(
                     rc.rectangle(drawingElement.x, drawingElement.y, drawingElement.width, drawingElement.height, {
@@ -67,6 +74,14 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
                         stroke: '#000'
                     })
                 )
+            } else if (drawingElement.type === 'line') {
+                if (drawingElement.lineShape === 'arrow') {
+                    drawArrow(ctx, x1, y1, x2, y2, '#000')
+                } else {
+                    rc.draw(
+                        rc.line(x1, y1, x2, y2, { roughness: 2.5, stroke: '#000' })
+                    )
+                }
             }
         }
     }, [elements, drawingElement])
