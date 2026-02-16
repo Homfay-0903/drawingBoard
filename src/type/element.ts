@@ -1,8 +1,9 @@
-export type ElementsTypes = 'rectangle' | 'line' | 'text'
-
+export type BaseElementsTypes = 'rectangle' | 'text'
 export type LinesTypes = 'arrow' | 'line'
+export type ToolsTypes = 'rectangle' | 'text' | 'line'
+export type ElementsTypes = BaseElementsTypes | LinesTypes
 
-interface BaseElements {
+export interface Elements {
     id: string
     type: ElementsTypes
     x: number
@@ -11,10 +12,14 @@ interface BaseElements {
     height: number
     //rough.js
     roughness?: number
-    stroke?: number
+    stroke?: string
 }
 
-interface LineElements extends BaseElements {
+export interface BaseElements extends Elements {
+    type: BaseElementsTypes
+}
+
+export interface LineElements extends Elements {
     type: 'line',
     lineShape?: LinesTypes
 }

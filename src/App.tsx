@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import Canvas from './components/canvas'
-import type { ElementsTypes } from './type/element'
+import type { ToolsTypes } from './type/element'
 
 function App() {
-  const [tool, setTool] = useState<ElementsTypes>('rectangle')
+  const [tool, setTool] = useState<ToolsTypes>('rectangle')
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import rough from 'roughjs/bin/rough';
-import type { ElementsTypes, LinesTypes, drawingBoardElements } from '../type/element'
+import type { ToolsTypes, LinesTypes, drawingBoardElements } from '../type/element'
 
 interface CanvCanvasProps {
-    selectedTool: ElementsTypes
+    selectedTool: ToolsTypes
 }
 
 const Canvas = ({ selectedTool }: CanvCanvasProps) => {
@@ -43,7 +43,18 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
                 )
             } else if (element.type === 'line') {
                 const x1 = element.x
-                const x2 = element.y
+                const y1 = element.y
+                const x2 = element.x + element.width
+                const y2 = element.y + element.height
+
+                if (element.lineShape === 'arrow') {
+                    drawArrow(ctx, x1, y1, x2, y2, element.stroke || '#000')
+                } else {
+                    rc.line(x1, x2, y1, y2, {
+                        roughness: element.roughness || 2.5,
+                        stroke: element.stroke || '#000',
+                    })
+                }
             }
         })
 
