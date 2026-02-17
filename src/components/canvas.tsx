@@ -51,7 +51,7 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
                 if (element.lineShape === 'arrow') {
                     drawArrow(ctx, x1, y1, x2, y2, element.stroke || '#000')
                 } else {
-                    rc.line(x1, x2, y1, y2, {
+                    rc.line(x1, y1, x2, y2, {
                         roughness: element.roughness || 2.5,
                         stroke: element.stroke || '#000',
                     })
