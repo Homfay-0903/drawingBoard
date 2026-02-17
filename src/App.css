@@ -1,10 +1,9 @@
-/* 全局样式 */
 html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    /* 禁止整个页面滚动，滚动由内部元素控制（如果需要） */
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* 如果需要禁止页面滚动 */
 }
