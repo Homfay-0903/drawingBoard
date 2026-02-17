@@ -21,7 +21,7 @@ function App() {
         <span style={{ margin: '0 10px' }}>
           <button
             onClick={() => { setTool('line'); setLineShape('arrow') }}
-            style={{ fontWeight: lineShape === 'line' ? 'normal' : 'bold' }}
+            style={{ fontWeight: lineShape === 'line' ? 'normal' : 'bold', marginRight: '10px' }}
           >
             箭头线
           </button>
