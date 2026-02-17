@@ -1,3 +1,4 @@
+import './App.css';
 import { useState } from 'react'
 import Canvas from './components/canvas'
 import type { ToolsTypes, LinesTypes } from './type/element'
@@ -7,7 +8,7 @@ function App() {
   const [lineShape, setLineShape] = useState<LinesTypes>('line')
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
       <div style={{ padding: '10px', backgroundColor: '#f0f0f0' }}>
         <button
           onClick={() => setTool('rectangle')}
