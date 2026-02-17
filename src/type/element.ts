@@ -1,7 +1,7 @@
 export type BaseElementsTypes = 'rectangle' | 'text'
-export type LinesTypes = 'arrow' | 'line'
+export type LinesTypes = 'arrow' | 'hand'
 export type ToolsTypes = 'rectangle' | 'text' | 'line'
-export type ElementsTypes = BaseElementsTypes | LinesTypes
+export type ElementsTypes = ToolsTypes
 
 export interface Elements {
     id: string

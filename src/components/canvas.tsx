@@ -4,7 +4,7 @@ import type { ToolsTypes, drawingBoardElements } from '../type/element'
 
 interface CanvCanvasProps {
     selectedTool: ToolsTypes
-    lineShape: 'line' | 'arrow'
+    lineShape: 'hand' | 'arrow' | undefined
 }
 
 const Canvas = ({ selectedTool }: CanvCanvasProps) => {

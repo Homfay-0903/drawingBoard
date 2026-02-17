@@ -5,13 +5,13 @@ import type { ToolsTypes, LinesTypes } from './type/element'
 
 function App() {
   const [tool, setTool] = useState<ToolsTypes>('rectangle')
-  const [lineShape, setLineShape] = useState<LinesTypes>('line')
+  const [lineShape, setLineShape] = useState<LinesTypes>()
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
       <div style={{ padding: '10px', backgroundColor: '#f0f0f0' }}>
         <button
-          onClick={() => setTool('rectangle')}
+          onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
           style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal' }}
         >
           画矩形
@@ -21,13 +21,13 @@ function App() {
         <span style={{ margin: '0 10px' }}>
           <button
             onClick={() => { setTool('line'); setLineShape('arrow') }}
-            style={{ fontWeight: lineShape === 'line' ? 'normal' : 'bold', marginRight: '10px' }}
+            style={{ fontWeight: lineShape === 'arrow' ? 'bold' : 'normal', marginRight: '10px' }}
           >
             箭头线
           </button>
           <button
-            onClick={() => { setTool('line'); setLineShape('line') }}
-            style={{ fontWeight: lineShape === 'line' ? 'bold' : 'normal' }}
+            onClick={() => { setTool('line'); setLineShape('hand') }}
+            style={{ fontWeight: lineShape === 'hand' ? 'bold' : 'normal' }}
           >
             手绘线
           </button>
@@ -35,7 +35,7 @@ function App() {
       </div>
 
       <Canvas selectedTool={tool} lineShape={lineShape}></Canvas>
-    </div>
+    </div >
   )
 }
 
