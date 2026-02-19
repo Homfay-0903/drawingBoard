@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import rough from 'roughjs/bin/rough';
 import type { ToolsTypes, drawingBoardElements } from '../type/element'
 
@@ -7,7 +7,7 @@ interface CanvCanvasProps {
     lineShape: 'hand' | 'arrow' | undefined
 }
 
-const Canvas = ({ selectedTool }: CanvCanvasProps) => {
+const Canvas = ({ selectedTool, lineShape }: CanvCanvasProps) => {
     //Canvas DOM 元素
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -19,6 +19,34 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
 
     //选取的工具
     //const [selectedTool, setSelectedTool] = useState<ElementsTypes>('rectangle')
+
+    const getCanvasRelativeCoords = (e: React.MouseEvent) => {
+        if (!canvasRef.current) return { x: 0, y: 0 }
+        const rect = canvasRef.current.getBoundingClientRect()
+        // 减去Canvas元素在视口中的偏移量，得到Canvas内部坐标
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+        return { x, y }
+    }
+
+    const resizeCanvas = () => {
+        if (canvasRef.current) {
+            canvasRef.current.width = window.innerWidth
+            canvasRef.current.height = window.innerHeight
+        }
+    }
+
+    //初始化画笔 + 窗口大小监听
+    useEffect(() => {
+        // 初始化Canvas尺寸
+        resizeCanvas()
+        // 监听窗口大小变化，更新Canvas尺寸
+        window.addEventListener('resize', resizeCanvas)
+
+        return () => {
+            window.removeEventListener('resize', resizeCanvas)
+        }
+    }, [])
 
     //初始化画笔
     useEffect(() => {
@@ -88,16 +116,18 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
 
     //鼠标按下：开始画图
     const handleMouseDown = (e: React.MouseEvent) => {
-        const { clientX, clientY } = e
+        const { x, y } = getCanvasRelativeCoords(e)
 
         const newElement: drawingBoardElements = {
             id: Math.random().toString(36).substr(2, 9),
             type: selectedTool,
-            x: clientX,
-            y: clientY,
+            x: x,
+            y: y,
             width: 0,
             height: 0,
-            roughness: 2.5
+            roughness: 2.5,
+            lineShape: lineShape
+
         }
 
         setDrawingElement(newElement)
@@ -107,9 +137,9 @@ const Canvas = ({ selectedTool }: CanvCanvasProps) => {
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!drawingElement) return
 
-        const { clientX, clientY } = e
-        const width = clientX - drawingElement.x
-        const height = clientY - drawingElement.y
+        const { x, y } = getCanvasRelativeCoords(e)
+        const width = x - drawingElement.x
+        const height = y - drawingElement.y
 
         setDrawingElement({
             ...drawingElement,
