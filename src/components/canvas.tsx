@@ -200,12 +200,19 @@ const Canvas = ({ selectedTool, lineShape }: CanvCanvasProps) => {
     return (
         <canvas
             ref={canvasRef}
-            width={window.innerWidth}
-            height={window.innerHeight}
+            width={window.innerWidth * 0.8}
+            height={window.innerHeight * 0.8}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
-            style={{ border: '1px solid #eee', display: 'block', backgroundColor: '#fff' }}>
+            style={{
+                width: '80%',
+                margin: 'auto',
+                border: '10px solid #885f22',
+                borderRadius: '5px',
+                display: 'block',
+                backgroundColor: '#fff'
+            }}>
         </canvas>
     )
 }
