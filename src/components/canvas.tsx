@@ -31,8 +31,8 @@ const Canvas = ({ selectedTool, lineShape }: CanvCanvasProps) => {
 
     const resizeCanvas = () => {
         if (canvasRef.current) {
-            canvasRef.current.width = window.innerWidth
-            canvasRef.current.height = window.innerHeight
+            canvasRef.current.width = window.innerWidth * 0.8
+            canvasRef.current.height = window.innerHeight * 0.8
         }
     }
 
@@ -200,8 +200,8 @@ const Canvas = ({ selectedTool, lineShape }: CanvCanvasProps) => {
     return (
         <canvas
             ref={canvasRef}
-            width={window.innerWidth * 0.8}
-            height={window.innerHeight * 0.8}
+            width={window.innerWidth}
+            height={window.innerHeight}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
