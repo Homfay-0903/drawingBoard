@@ -1,11 +1,16 @@
 import './App.css';
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import Canvas from './components/canvas'
 import type { ToolsTypes, LinesTypes } from './type/element'
 
 function App() {
   const [tool, setTool] = useState<ToolsTypes>('rectangle')
   const [lineShape, setLineShape] = useState<LinesTypes>()
+  const [clearCanvas, setclearCanvas] = useState<() => void>(() => () => { })
+
+  const registerClear = useCallback((fn: () => void) => {
+    setclearCanvas(() => fn)
+  }, [])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
@@ -38,9 +43,15 @@ function App() {
             手绘线
           </button>
         </span>
+
+        <button
+          onClick={clearCanvas}
+        >
+          清空画布
+        </button>
       </div>
 
-      <Canvas selectedTool={tool} lineShape={lineShape}></Canvas>
+      <Canvas selectedTool={tool} lineShape={lineShape} registerClear={registerClear}></Canvas>
     </div >
   )
 }

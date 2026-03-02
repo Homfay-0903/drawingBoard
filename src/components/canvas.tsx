@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import rough from 'roughjs/bin/rough';
 import type { ToolsTypes, drawingBoardElements } from '../type/element'
 
@@ -199,18 +199,18 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
     }
 
     //清空画布
-    const clearAllElements = () => {
+    const clearAllElements = useCallback(() => {
         setElements([])
         setDrawingElement(null)
         if (canvasRef.current) {
             const ctx = canvasRef.current.getContext('2d')
             ctx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
         }
-    }
+    }, [])
 
     useEffect(() => {
         registerClear(clearAllElements)
-    }, [registerClear])
+    }, [registerClear, clearAllElements])
 
     return (
         <canvas
