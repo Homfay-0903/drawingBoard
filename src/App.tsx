@@ -45,7 +45,12 @@ function App() {
         </span>
 
         <button
-          onClick={clearCanvas}
+          onClick={() => {
+            if (window.confirm('确定要清空画布吗？清空后无法恢复！')) {
+              clearCanvas()
+            }
+          }}
+          style={{ backgroundColor: 'red' }}
         >
           清空画布
         </button>
