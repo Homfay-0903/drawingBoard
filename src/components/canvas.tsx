@@ -5,9 +5,10 @@ import type { ToolsTypes, drawingBoardElements } from '../type/element'
 interface CanvCanvasProps {
     selectedTool: ToolsTypes
     lineShape: 'hand' | 'arrow' | undefined
+    registerClear: (clearFunc: () => void) => void
 }
 
-const Canvas = ({ selectedTool, lineShape }: CanvCanvasProps) => {
+const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => {
     //Canvas DOM 元素
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -196,6 +197,20 @@ const Canvas = ({ selectedTool, lineShape }: CanvCanvasProps) => {
         ctx.closePath()
         ctx.fill()
     }
+
+    //清空画布
+    const clearAllElements = () => {
+        setElements([])
+        setDrawingElement(null)
+        if (canvasRef.current) {
+            const ctx = canvasRef.current.getContext('2d')
+            ctx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+        }
+    }
+
+    useEffect(() => {
+        registerClear(clearAllElements)
+    }, [registerClear])
 
     return (
         <canvas
