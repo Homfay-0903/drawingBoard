@@ -9,7 +9,13 @@ function App() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-      <div style={{ padding: '10px', backgroundColor: '#f0f0f0' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '10px',
+        backgroundColor: '#f0f0f0'
+      }}>
         <button
           onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
           style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal' }}
