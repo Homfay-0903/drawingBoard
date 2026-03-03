@@ -13,6 +13,7 @@ export interface Elements {
     //rough.js
     roughness?: number
     stroke?: string
+    points?: { x: number, y: number }[]
 }
 
 export interface BaseElements extends Elements {
@@ -22,7 +23,6 @@ export interface BaseElements extends Elements {
 export interface LineElements extends Elements {
     type: 'line',
     lineShape?: LinesTypes
-    points?: { x: number, y: number }[]
 }
 
 export type drawingBoardElements = BaseElements | LineElements
