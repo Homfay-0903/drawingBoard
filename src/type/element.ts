@@ -22,6 +22,7 @@ export interface BaseElements extends Elements {
 export interface LineElements extends Elements {
     type: 'line',
     lineShape?: LinesTypes
+    points?: { x: number, y: number }[]
 }
 
 export type drawingBoardElements = BaseElements | LineElements

@@ -79,7 +79,22 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
 
                 if (element.lineShape === 'arrow') {
                     drawArrow(ctx, x1, y1, x2, y2, element.stroke || '#000')
-                } else {
+                }
+                // 新增：手绘线绘制轨迹路径（先类型缩小为 LineElements）
+                else if (element.lineShape === 'hand') {
+                    const lineEl = element as any
+                    if (lineEl.points && lineEl.points.length) {
+                        const pathStr = lineEl.points.map((p: any, i: number) =>
+                            i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`
+                        ).join(' ')
+                        rc.draw(rc.path(pathStr, {
+                            roughness: element.roughness || 2.5,
+                            stroke: element.stroke || '#000',
+                        }))
+                    }
+                }
+                // 原有直线逻辑（兜底）
+                else {
                     rc.line(x1, y1, x2, y2, {
                         roughness: element.roughness || 2.5,
                         stroke: element.stroke || '#000',
@@ -106,10 +121,21 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
             } else if (drawingElement.type === 'line') {
                 if (drawingElement.lineShape === 'arrow') {
                     drawArrow(ctx, x1, y1, x2, y2, '#000')
-                } else {
-                    rc.draw(
-                        rc.line(x1, y1, x2, y2, { roughness: 2.5, stroke: '#000' })
-                    )
+                } // 新增：手绘线预览轨迹
+                else if (drawingElement.lineShape === 'hand') {
+                    const de = drawingElement as any
+                    if (de.points && de.points.length) {
+                        const pathStr = de.points.map((p: any, i: number) =>
+                            i === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`
+                        ).join(' ')
+                        rc.draw(rc.path(pathStr, {
+                            roughness: 2.5,
+                            stroke: '#000'
+                        }))
+                    }
+                }
+                else {
+                    rc.draw(rc.line(x1, y1, x2, y2, { roughness: 2.5, stroke: '#000' }))
                 }
             }
         }
@@ -127,7 +153,8 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
             width: 0,
             height: 0,
             roughness: 2.5,
-            lineShape: lineShape
+            lineShape: lineShape,
+            ...(selectedTool === 'line' && lineShape === 'hand' ? { points: [{ x, y }] } : {})
 
         }
 
@@ -139,20 +166,33 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
         if (!drawingElement) return
 
         const { x, y } = getCanvasRelativeCoords(e)
-        const width = x - drawingElement.x
-        const height = y - drawingElement.y
 
-        setDrawingElement({
-            ...drawingElement,
-            width,
-            height
-        })
+        if (selectedTool === 'line' && lineShape === 'hand') {
+            setDrawingElement({
+                ...drawingElement,
+                points: [...(drawingElement.points || []), { x, y }]
+            })
+
+        } else {
+            const width = x - drawingElement.x
+            const height = y - drawingElement.y
+
+            setDrawingElement({
+                ...drawingElement,
+                width,
+                height
+            })
+        }
     }
 
     //结束绘制
     const handleMouseUp = () => {
         if (drawingElement) {
-            if (Math.abs(drawingElement.width) > 5 || Math.abs(drawingElement.height) > 5) {
+            // 对于手绘线（使用 points 存储轨迹），根据 points 长度判断是否加入元素
+            const de: any = drawingElement
+            const isHandLine = drawingElement.type === 'line' && drawingElement.lineShape === 'hand'
+            const hasEnoughPoints = isHandLine ? (de.points && de.points.length > 1) : (Math.abs(drawingElement.width) > 5 || Math.abs(drawingElement.height) > 5)
+            if (hasEnoughPoints) {
                 setElements((prev) => [...prev, drawingElement])
             }
             setDrawingElement(null)
