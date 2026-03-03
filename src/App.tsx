@@ -19,11 +19,11 @@ function App() {
         justifyContent: 'center',
         alignItems: 'center',
         padding: '10px',
-        backgroundColor: '#f0f0f0'
+        backgroundColor: '#EAE0CD'
       }}>
         <button
           onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
-          style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal' }}
+          style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal', backgroundColor: '#FCC58D' }}
         >
           画矩形
         </button>
@@ -32,13 +32,13 @@ function App() {
         <span style={{ margin: '0 10px' }}>
           <button
             onClick={() => { setTool('line'); setLineShape('arrow') }}
-            style={{ fontWeight: lineShape === 'arrow' ? 'bold' : 'normal', marginRight: '10px' }}
+            style={{ fontWeight: lineShape === 'arrow' ? 'bold' : 'normal', marginRight: '10px', backgroundColor: '#FCC58D' }}
           >
             箭头线
           </button>
           <button
             onClick={() => { setTool('line'); setLineShape('hand') }}
-            style={{ fontWeight: lineShape === 'hand' ? 'bold' : 'normal' }}
+            style={{ fontWeight: lineShape === 'hand' ? 'bold' : 'normal', backgroundColor: '#FCC58D' }}
           >
             手绘线
           </button>

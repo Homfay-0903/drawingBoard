@@ -266,7 +266,7 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
                 border: '10px solid #885f22',
                 borderRadius: '5px',
                 display: 'block',
-                backgroundColor: '#fff'
+                backgroundColor: '#FFFFF0'
             }}>
         </canvas>
     )
