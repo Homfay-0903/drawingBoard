@@ -6,9 +6,10 @@ interface CanvCanvasProps {
     selectedTool: ToolsTypes
     lineShape: 'hand' | 'arrow' | undefined
     registerClear: (clearFunc: () => void) => void
+    strokeColor: string
 }
 
-const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => {
+const Canvas = ({ selectedTool, lineShape, registerClear, strokeColor }: CanvCanvasProps) => {
     //Canvas DOM 元素
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -37,7 +38,7 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
         }
     }
 
-    //初始化画笔 + 窗口大小监听
+    //窗口大小监听
     useEffect(() => {
         // 初始化Canvas尺寸
         resizeCanvas()
@@ -68,7 +69,7 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
                 rc.draw(
                     rc.rectangle(element.x, element.y, element.width, element.height, {
                         roughness: 2.5,
-                        stroke: '#000'
+                        stroke: element.stroke || strokeColor
                     })
                 )
             } else if (element.type === 'line') {
@@ -78,7 +79,7 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
                 const y2 = element.y + element.height
 
                 if (element.lineShape === 'arrow') {
-                    drawArrow(ctx, x1, y1, x2, y2, element.stroke || '#000')
+                    drawArrow(ctx, x1, y1, x2, y2, element.stroke || strokeColor)
                 }
                 // 新增：手绘线绘制轨迹路径（先类型缩小为 LineElements）
                 else if (element.lineShape === 'hand') {
@@ -89,7 +90,7 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
                         ).join(' ')
                         rc.draw(rc.path(pathStr, {
                             roughness: element.roughness || 2.5,
-                            stroke: element.stroke || '#000',
+                            stroke: element.stroke || strokeColor,
                         }))
                     }
                 }
@@ -97,7 +98,7 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
                 else {
                     rc.line(x1, y1, x2, y2, {
                         roughness: element.roughness || 2.5,
-                        stroke: element.stroke || '#000',
+                        stroke: element.stroke || strokeColor,
                     })
                 }
             }
@@ -115,12 +116,12 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
                 rc.draw(
                     rc.rectangle(drawingElement.x, drawingElement.y, drawingElement.width, drawingElement.height, {
                         roughness: 2.5,
-                        stroke: '#000'
+                        stroke: drawingElement.stroke || strokeColor
                     })
                 )
             } else if (drawingElement.type === 'line') {
                 if (drawingElement.lineShape === 'arrow') {
-                    drawArrow(ctx, x1, y1, x2, y2, '#000')
+                    drawArrow(ctx, x1, y1, x2, y2, drawingElement.stroke || strokeColor)
                 } // 新增：手绘线预览轨迹
                 else if (drawingElement.lineShape === 'hand') {
                     const de = drawingElement as any
@@ -130,16 +131,16 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
                         ).join(' ')
                         rc.draw(rc.path(pathStr, {
                             roughness: 2.5,
-                            stroke: '#000'
+                            stroke: de.stroke || strokeColor
                         }))
                     }
                 }
                 else {
-                    rc.draw(rc.line(x1, y1, x2, y2, { roughness: 2.5, stroke: '#000' }))
+                    rc.draw(rc.line(x1, y1, x2, y2, { roughness: 2.5, stroke: drawingElement.stroke || strokeColor }))
                 }
             }
         }
-    }, [elements, drawingElement])
+    }, [elements, drawingElement, strokeColor])
 
     //鼠标按下：开始画图
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -154,6 +155,7 @@ const Canvas = ({ selectedTool, lineShape, registerClear }: CanvCanvasProps) => 
             height: 0,
             roughness: 2.5,
             lineShape: lineShape,
+            stroke: strokeColor,
             ...(selectedTool === 'line' && lineShape === 'hand' ? { points: [{ x, y }] } : {})
 
         }

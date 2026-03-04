@@ -6,10 +6,11 @@ import type { ToolsTypes, LinesTypes } from './type/element'
 function App() {
   const [tool, setTool] = useState<ToolsTypes>('rectangle')
   const [lineShape, setLineShape] = useState<LinesTypes>()
-  const [clearCanvas, setclearCanvas] = useState<() => void>(() => () => { })
+  const [clearCanvas, setClearCanvas] = useState<() => void>(() => () => { })
+  const [strokeColor, setStrokeColor] = useState<string>('#000')
 
   const registerClear = useCallback((fn: () => void) => {
-    setclearCanvas(() => fn)
+    setClearCanvas(() => fn)
   }, [])
 
   return (
@@ -21,6 +22,25 @@ function App() {
         padding: '10px',
         backgroundColor: '#EAE0CD'
       }}>
+        <div style={{
+          marginRight: '10px',
+          backgroundColor: '#FCC58D',
+          padding: '8px 18px',
+          borderRadius: '8px',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          画笔颜色
+          <input
+            type="color"
+            value={strokeColor}
+            onChange={(e) => setStrokeColor(e.target.value)}
+            style={{ width: '24px', height: '24px', border: 'none', cursor: 'pointer', padding: '0', backgroundColor: '#FCC58D' }}
+
+            title="点击选择颜色"
+          />
+        </div>
+
         <button
           onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
           style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal', backgroundColor: '#FCC58D' }}
@@ -56,7 +76,7 @@ function App() {
         </button>
       </div>
 
-      <Canvas selectedTool={tool} lineShape={lineShape} registerClear={registerClear}></Canvas>
+      <Canvas strokeColor={strokeColor} selectedTool={tool} lineShape={lineShape} registerClear={registerClear}></Canvas>
     </div >
   )
 }
