@@ -1,4 +1,8 @@
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/home';
+import About from './pages/about';
+import Navbar from './components/navbar';
 import { useState, useCallback } from 'react'
 import Canvas from './components/canvas'
 import type { ToolsTypes, LinesTypes } from './type/element'
