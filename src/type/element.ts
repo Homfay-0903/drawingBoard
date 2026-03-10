@@ -16,8 +16,14 @@ export interface Elements {
     points?: { x: number, y: number }[]
 }
 
+export interface TextElements extends Elements {
+    type: 'text'
+    content: string // 文本内容
+}
+
+
 export interface BaseElements extends Elements {
-    type: BaseElementsTypes
+    type: Exclude<BaseElementsTypes, 'text'>
 }
 
 export interface LineElements extends Elements {
@@ -25,4 +31,4 @@ export interface LineElements extends Elements {
     lineShape?: LinesTypes
 }
 
-export type drawingBoardElements = BaseElements | LineElements
+export type drawingBoardElements = BaseElements | LineElements | TextElements

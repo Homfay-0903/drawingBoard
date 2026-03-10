@@ -1,7 +1,7 @@
 import React, { Component, type ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
-    chilren: ReactNode
+    children: ReactNode
     fallback?: ReactNode
 }
 
@@ -38,7 +38,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             )
         }
 
-        return this.props.chilren
+        return this.props.children
     }
 }
 

@@ -1,87 +1,37 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useLocation, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/home';
 import About from './pages/about';
 import Navbar from './components/navbar';
-import { useState, useCallback } from 'react'
-import Canvas from './components/canvas'
-import type { ToolsTypes, LinesTypes } from './type/element'
+import DrawingBoard from './components/drawing-board-wrapper';
 
-function App() {
-  const [tool, setTool] = useState<ToolsTypes>('rectangle')
-  const [lineShape, setLineShape] = useState<LinesTypes>()
-  const [clearCanvas, setClearCanvas] = useState<() => void>(() => () => { })
-  const [strokeColor, setStrokeColor] = useState<string>('#000')
 
-  const registerClear = useCallback((fn: () => void) => {
-    setClearCanvas(() => fn)
-  }, [])
-
+const DrawingBoardWrapper = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '10px',
-        backgroundColor: '#EAE0CD'
-      }}>
-        <div style={{
-          marginRight: '10px',
-          backgroundColor: '#FCC58D',
-          padding: '8px 18px',
-          borderRadius: '8px',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          画笔颜色
-          <input
-            type="color"
-            value={strokeColor}
-            onChange={(e) => setStrokeColor(e.target.value)}
-            style={{ width: '24px', height: '24px', border: 'none', cursor: 'pointer', padding: '0', backgroundColor: '#FCC58D' }}
+      <DrawingBoard />
+    </div>
+  )
+}
 
-            title="点击选择颜色"
-          />
-        </div>
-
-        <button
-          onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
-          style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal', backgroundColor: '#FCC58D' }}
-        >
-          画矩形
-        </button>
-
-        {/* 线条工具组 */}
-        <span style={{ margin: '0 10px' }}>
-          <button
-            onClick={() => { setTool('line'); setLineShape('arrow') }}
-            style={{ fontWeight: lineShape === 'arrow' ? 'bold' : 'normal', marginRight: '10px', backgroundColor: '#FCC58D' }}
-          >
-            箭头线
-          </button>
-          <button
-            onClick={() => { setTool('line'); setLineShape('hand') }}
-            style={{ fontWeight: lineShape === 'hand' ? 'bold' : 'normal', backgroundColor: '#FCC58D' }}
-          >
-            手绘线
-          </button>
-        </span>
-
-        <button
-          onClick={() => {
-            if (window.confirm('确定要清空画布吗？清空后无法恢复！')) {
-              clearCanvas()
-            }
-          }}
-          style={{ backgroundColor: 'red' }}
-        >
-          清空画布
-        </button>
-      </div>
-
-      <Canvas strokeColor={strokeColor} selectedTool={tool} lineShape={lineShape} registerClear={registerClear}></Canvas>
-    </div >
+function App() {
+  const location = useLocation()
+  return (
+    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
+      {/* 全局导航栏（绘图页使用页面内底部导航，因此在该路由隐藏） */}
+      {location.pathname !== '/drawing-board' && <Navbar />}
+      {/* 路由匹配规则*/}
+      <Routes>
+        <Route path="/" element={<Home />} /> {/* 首页 */}
+        <Route path="/drawing-board" element={<DrawingBoardWrapper />} /> {/* 绘图板页 */}
+        <Route path="/about" element={<About />} /> {/* 关于页 */}
+        {/* 404页面 */}
+        <Route path="*" element={<div style={{ textAlign: 'center', padding: '20px' }}>
+          <h1>404 - 页面未找到</h1>
+          <Link to="/">返回首页</Link>
+        </div>} />
+      </Routes>
+    </div>
   )
 }
 

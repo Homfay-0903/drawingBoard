@@ -9,7 +9,7 @@ interface DrawingContextType {
     strokeColor: string
     setStrokeColor: (color: string) => void
     elements: drawingBoardElements[]
-    setElements: (newElements: drawingBoardElements[]) => void
+    setElements: React.Dispatch<React.SetStateAction<drawingBoardElements[]>>
     drawingElement: drawingBoardElements | null
     setDrawingElement: React.Dispatch<React.SetStateAction<drawingBoardElements | null>>
     historyStack: drawingBoardElements[][] // 历史记录栈
@@ -49,13 +49,18 @@ export const DrawingProvider = ({ children }: React.PropsWithChildren) => {
         }
     }, [historyIndex, historyStack])
 
-    // 更新元素时同步历史记录
-    const updateElementsWithHistory = useCallback((newElements: drawingBoardElements[]) => {
-        setElements(newElements)
+    // 更新元素时同步历史记录，支持函数式更新
+    const updateElementsWithHistory = useCallback((newElements: React.SetStateAction<drawingBoardElements[]>) => {
+        setElements((prev) => {
+            const resolved = typeof newElements === 'function'
+                ? (newElements as (prev: drawingBoardElements[]) => drawingBoardElements[])(prev)
+                : newElements
 
-        const newHistory = historyStack.slice(0, historyIndex + 1).concat([newElements])
-        setHistoryStack(newHistory)
-        setHistoryIndex(historyStack.length - 1)
+            const newHistory = historyStack.slice(0, historyIndex + 1).concat([resolved])
+            setHistoryStack(newHistory)
+            setHistoryIndex(newHistory.length - 1)
+            return resolved
+        })
     }, [historyIndex, historyStack])
 
     const contextValue = useMemo<DrawingContextType>(() => ({
