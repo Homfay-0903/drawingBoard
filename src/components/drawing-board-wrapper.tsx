@@ -6,7 +6,7 @@ import Navbar from './navbar'
 import { useCallback } from 'react'
 
 const Toolbar = () => {
-    const { tool, setTool, lineShape, setLineShape, strokeColor, setStrokeColor, setElements, setDrawingElement } = useDrawingContext()
+    const { tool, setTool, lineShape, setLineShape, strokeColor, setStrokeColor, strokeWidth, setStrokeWidth, setElements, setDrawingElement, exportToImage } = useDrawingContext()
 
     const handleClearCanvas = useCallback(() => {
         if (window.confirm('确定要清空画布吗？清空后无法恢复！')) {
@@ -42,6 +42,27 @@ const Toolbar = () => {
                 />
             </div>
 
+            {/* 画笔粗细选择器 */}
+            <div style={{
+                marginRight: '10px',
+                backgroundColor: '#FCC58D',
+                padding: '8px 18px',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center'
+            }}>
+                画笔粗细
+                <select
+                    value={strokeWidth}
+                    onChange={(e) => setStrokeWidth(Number(e.target.value))}
+                    style={{ marginLeft: '8px', padding: '2px', backgroundColor: '#fff', color: '#000' }}
+                >
+                    {[1, 2, 3, 4, 5, 6, 8, 10, 12].map(width => (
+                        <option key={width} value={width}>{width}px</option>
+                    ))}
+                </select>
+            </div>
+
             {/* 基础工具 */}
             <button
                 onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
@@ -74,6 +95,14 @@ const Toolbar = () => {
 
             {/* 历史记录（撤销/重做） */}
             <HistoryControls />
+
+            {/* 导出图片 */}
+            <button
+                onClick={exportToImage}
+                style={{ backgroundColor: '#4CAF50', color: 'white', marginLeft: '10px' }}
+            >
+                导出图片
+            </button>
 
             {/* 清空画布 */}
             <button

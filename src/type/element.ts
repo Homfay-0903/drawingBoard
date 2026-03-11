@@ -13,6 +13,7 @@ export interface Elements {
     //rough.js
     roughness?: number
     stroke?: string
+    strokeWidth?: number  // 画笔粗细
     points?: { x: number, y: number }[]
 }
 

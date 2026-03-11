@@ -6,9 +6,9 @@ const About = () => {
                 <h3>技术栈</h3>
                 <ul>
                     <li>React（核心Hook：useState/useEffect/useContext/useRef/useCallback/useMemo）</li>
-                    <li>TypeScript（类型安全）</li>
-                    <li>React Router（路由管理）</li>
-                    <li>rough.js（手绘风格渲染）</li>
+                    <li>TypeScript</li>
+                    <li>React Router</li>
+                    <li>rough.js</li>
                 </ul>
                 <h3>核心功能</h3>
                 <ul>
