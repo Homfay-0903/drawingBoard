@@ -22,6 +22,20 @@ const Canvas = () => {
     // 自定义Hook：画布工具函数
     const { getCanvasRelativeCoords } = useCanvasUtils(canvasRef)
 
+    // 跟踪窗口大小变化以触发重绘
+    const [windowResizeTrigger, setWindowResizeTrigger] = useState(0)
+
+    // 监听窗口大小变化并触发重绘
+    useEffect(() => {
+        const handleResize = () => {
+            // 更新状态以触发重绘
+            setWindowResizeTrigger(prev => prev + 1)
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
     // 文本输入弹窗状态
     const [textModalVisible, setTextModalVisible] = useState(false)
     const [textModalPos, setTextModalPos] = useState({ x: 0, y: 0 })
@@ -164,7 +178,7 @@ const Canvas = () => {
                 }
             }
         }
-    }, [elements, drawingElement, strokeColor, strokeWidth, lineShape, selectedTool])
+    }, [elements, drawingElement, strokeColor, strokeWidth, lineShape, selectedTool, windowResizeTrigger])
 
     // 鼠标按下：开始绘制
     const handleMouseDown = (e: React.MouseEvent) => {

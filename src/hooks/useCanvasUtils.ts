@@ -46,10 +46,12 @@ export const useCanvasUtils = (canvasRef: React.RefObject<HTMLCanvasElement | nu
     // 监听窗口大小变化
     useEffect(() => {
         resizeCanvas()
-        const resizeHandler = () => resizeCanvas()
+        const resizeHandler = () => {
+            resizeCanvas()
+        }
         window.addEventListener('resize', resizeHandler)
         return () => window.removeEventListener('resize', resizeHandler)
-    }, [])
+    }, [resizeCanvas])
 
     return { getCanvasRelativeCoords, resizeCanvas }
 }
