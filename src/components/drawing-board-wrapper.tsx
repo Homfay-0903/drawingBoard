@@ -65,12 +65,6 @@ const Toolbar = () => {
 
             {/* 基础工具 */}
             <button
-                onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
-                style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal', backgroundColor: '#FCC58D', marginRight: '10px' }}
-            >
-                画矩形
-            </button>
-            <button
                 onClick={() => { setTool('text'); setLineShape(undefined) }}
                 style={{ fontWeight: tool === 'text' ? 'bold' : 'normal', backgroundColor: '#FCC58D', marginRight: '10px' }}
             >
@@ -79,6 +73,12 @@ const Toolbar = () => {
 
             {/* 线条工具组 */}
             <span style={{ margin: '0 10px' }}>
+                <button
+                    onClick={() => { setTool('rectangle'); setLineShape(undefined) }}
+                    style={{ fontWeight: tool === 'rectangle' ? 'bold' : 'normal', backgroundColor: '#FCC58D', marginRight: '10px' }}
+                >
+                    画矩形
+                </button>
                 <button
                     onClick={() => { setTool('line'); setLineShape('arrow') }}
                     style={{ fontWeight: lineShape === 'arrow' ? 'bold' : 'normal', marginRight: '10px', backgroundColor: '#FCC58D' }}

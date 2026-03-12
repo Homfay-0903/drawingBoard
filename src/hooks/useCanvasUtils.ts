@@ -23,9 +23,9 @@ export const useCanvasUtils = (canvasRef: React.RefObject<HTMLCanvasElement | nu
         const canvas = canvasRef.current
         const parent = canvas.parentElement
 
-        // 目标 CSS 尺寸（保持原先的 80% 逻辑）
-        const cssWidth = parent ? parent.clientWidth * 0.8 : window.innerWidth * 0.8
-        const cssHeight = parent ? parent.clientHeight * 0.8 : window.innerHeight * 0.8
+        // 目标 CSS 尺寸
+        const cssWidth = parent ? parent.clientWidth * 0.6 : window.innerWidth * 0.8
+        const cssHeight = parent ? parent.clientHeight * 0.9 : window.innerHeight * 0.8
 
         // 设备像素比（为高清屏做处理）
         const dpr = window.devicePixelRatio || 1

@@ -28,7 +28,7 @@ export const DrawingProvider = ({ children }: React.PropsWithChildren) => {
     const [tool, setTool] = useState<ToolsTypes>('rectangle')
     const [lineShape, setLineShape] = useState<LinesTypes>()
     const [strokeColor, setStrokeColor] = useState<string>('#000000')
-    const [strokeWidth, setStrokeWidth] = useState<number>(2) // 默认画笔粗细
+    const [strokeWidth, setStrokeWidth] = useState<number>(2)
     const [elements, setElements] = useState<drawingBoardElements[]>([])
     const [drawingElement, setDrawingElement] = useState<drawingBoardElements | null>(null)
 
@@ -75,7 +75,7 @@ export const DrawingProvider = ({ children }: React.PropsWithChildren) => {
         const ctx = tempCanvas.getContext('2d');
         if (!ctx) return;
 
-        // 设置合适的尺寸（可以根据需要调整）
+        // 设置合适的尺寸
         tempCanvas.width = 1200;
         tempCanvas.height = 800;
 
