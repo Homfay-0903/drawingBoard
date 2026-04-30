@@ -1,10 +1,11 @@
-import './App.css';
-import { useLocation, Routes, Route, Link } from 'react-router-dom';
-import Home from './pages/home';
-import About from './pages/about';
-import Navbar from './components/navbar';
-import DrawingBoard from './components/drawing-board-wrapper';
-
+import './App.css'
+import { useLocation, Routes, Route, Link } from 'react-router-dom'
+import Home from './pages/home'
+import About from './pages/about'
+import Lobby from './pages/lobby'
+import GameRoom from './pages/game-room'
+import Navbar from './components/navbar'
+import DrawingBoard from './components/drawing-board-wrapper'
 
 const DrawingBoardWrapper = () => {
   return (
@@ -16,20 +17,26 @@ const DrawingBoardWrapper = () => {
 
 function App() {
   const location = useLocation()
+  
+  const hideNavbarPaths = ['/drawing-board', '/room']
+  const showNavbar = !hideNavbarPaths.includes(location.pathname)
+
   return (
-    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      {/* 全局导航栏（绘图页使用页面内底部导航，因此在该路由隐藏） */}
-      {location.pathname !== '/drawing-board' && <Navbar />}
-      {/* 路由匹配规则*/}
+    <div style={{ width: '100vw', minHeight: '100vh', overflow: 'hidden' }}>
+      {showNavbar && <Navbar />}
+      
       <Routes>
-        <Route path="/" element={<Home />} /> {/* 首页 */}
-        <Route path="/drawing-board" element={<DrawingBoardWrapper />} /> {/* 绘图板页 */}
-        <Route path="/about" element={<About />} /> {/* 关于页 */}
-        {/* 404页面 */}
-        <Route path="*" element={<div style={{ textAlign: 'center', padding: '20px' }}>
-          <h1>404 - 页面未找到</h1>
-          <Link to="/">返回首页</Link>
-        </div>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/lobby" element={<Lobby />} />
+        <Route path="/room" element={<GameRoom />} />
+        <Route path="/drawing-board" element={<DrawingBoardWrapper />} />
+        <Route path="/about" element={<About />} />
+        <Route path="*" element={
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <h1>404 - 页面未找到</h1>
+            <Link to="/">返回首页</Link>
+          </div>
+        } />
       </Routes>
     </div>
   )
