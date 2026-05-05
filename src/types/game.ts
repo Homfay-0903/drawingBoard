@@ -40,6 +40,7 @@ export interface RoomData {
   currentWord: string | null
   wordHints: string[]
   drawTime: number
+  canStartGame: boolean
 }
 
 export type GameStatus = 'waiting' | 'selecting' | 'drawing' | 'roundEnd' | 'gameEnd'

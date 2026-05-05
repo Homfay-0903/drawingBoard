@@ -1,4 +1,4 @@
-import type { RoomData, PlayerData, DrawingElement, ChatMessageData } from './game'
+import type { RoomData, PlayerData, DrawingElement } from './game'
 
 export interface ServerToClientEvents {
   'room:list': (data: RoomData[]) => void
