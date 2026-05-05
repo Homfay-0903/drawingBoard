@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import { useSocketContext } from './socket-context'
+import { useAuthContext } from './auth-context'
 import type { RoomData, PlayerData, ChatMessageData, GameStatus, DrawingElement } from '../types/game'
 
 interface GameContextType {
@@ -18,7 +19,7 @@ interface GameContextType {
   canvasElements: DrawingElement[]
   setRooms: (rooms: RoomData[]) => void
   createRoom: (name: string, maxPlayers: number) => void
-  joinRoom: (roomId: string, nickname: string) => void
+  joinRoom: (roomId: string) => void
   leaveRoom: () => void
   toggleReady: () => void
   startGame: () => void
@@ -33,6 +34,7 @@ const GameContext = createContext<GameContextType | null>(null)
 
 export const GameProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { socket, isConnected } = useSocketContext()
+  const { user } = useAuthContext()
 
   const [rooms, setRooms] = useState<RoomData[]>([])
   const [currentRoom, setCurrentRoom] = useState<RoomData | null>(null)
@@ -47,45 +49,42 @@ export const GameProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
   const [finalScores, setFinalScores] = useState<Record<string, number>>({})
   const [canvasElements, setCanvasElements] = useState<DrawingElement[]>([])
 
-  const isDrawer = currentRoom?.currentDrawerId === currentPlayer?.id
+  const myPlayerId = user ? `user_${user.id}` : ''
+
+  const isDrawer = currentRoom?.currentDrawerId === myPlayerId
 
   useEffect(() => {
     if (!socket || !isConnected) return
 
     socket.on('room:list', (roomList: RoomData[]) => {
-      console.log('[Game] 收到房间列表:', roomList.length)
       setRooms(roomList)
     })
 
     socket.on('room:created', ({ room }: { room: RoomData }) => {
-      console.log('[Game] 房间创建成功:', room.id)
       setCurrentRoom(room)
-      const player = room.players.find(p => p.socketId === socket.id)
+      const player = room.players.find(p => p.id === myPlayerId)
       setCurrentPlayer(player || null)
     })
 
     socket.on('room:joined', ({ room, player }: { room: RoomData; player: PlayerData }) => {
-      console.log('[Game] 加入房间成功:', room.id)
       setCurrentRoom(room)
-      setCurrentPlayer(player)
+      const myPlayer = room.players.find(p => p.id === myPlayerId)
+      setCurrentPlayer(myPlayer || player)
     })
 
     socket.on('room:updated', ({ room }: { room: RoomData }) => {
-      console.log('[Game] 房间更新:', room.id)
       setCurrentRoom(room)
-      if (currentPlayer) {
-        const updatedPlayer = room.players.find(p => p.id === currentPlayer.id)
+      if (myPlayerId) {
+        const updatedPlayer = room.players.find(p => p.id === myPlayerId)
         setCurrentPlayer(updatedPlayer || null)
       }
     })
 
     socket.on('room:error', ({ message }: { message: string }) => {
-      console.error('[Game] 错误:', message)
       alert(message)
     })
 
     socket.on('game:started', ({ gameState }: { gameState: any }) => {
-      console.log('[Game] 游戏开始:', gameState)
       setGameStatus(gameState.status)
       setTimeLeft(gameState.timeLeft)
       setWordHints(gameState.wordHints || [])
@@ -95,12 +94,10 @@ export const GameProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     })
 
     socket.on('game:selectWord', ({ words }: { words: string[] }) => {
-      console.log('[Game] 选词:', words)
       setSelectWords(words)
     })
 
     socket.on('game:wordHint', ({ hints, length }: { hints: string[]; length: number }) => {
-      console.log('[Game] 词语提示:', hints)
       setWordHints(hints)
       setWordLength(length)
     })
@@ -110,19 +107,16 @@ export const GameProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     })
 
     socket.on('game:correctGuess', ({ playerName, score }: { playerId: string; playerName: string; score: number }) => {
-      console.log('[Game] 猜对:', playerName, score)
       addSystemMessage(`${playerName} 猜对了！+${score}分`)
     })
 
     socket.on('game:roundEnd', ({ word, scores }: { word: string; scores: Record<string, number> }) => {
-      console.log('[Game] 回合结束:', word)
       setGameStatus('roundEnd')
       setRoundScores(scores)
       addSystemMessage(`正确答案: ${word}`)
     })
 
     socket.on('game:gameEnd', ({ finalScores }: { finalScores: Record<string, number> }) => {
-      console.log('[Game] 游戏结束')
       setGameStatus('gameEnd')
       setFinalScores(finalScores)
       addSystemMessage('游戏结束！')
@@ -165,7 +159,7 @@ export const GameProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
       socket.off('canvas:cleared')
       socket.off('chat:message')
     }
-  }, [socket, isConnected, currentPlayer])
+  }, [socket, isConnected, myPlayerId])
 
   const addSystemMessage = useCallback((message: string) => {
     const msg: ChatMessageData = {
@@ -184,9 +178,9 @@ export const GameProvider: React.FC<React.PropsWithChildren> = ({ children }) =>
     socket.emit('room:create', { name, maxPlayers })
   }, [socket])
 
-  const joinRoom = useCallback((roomId: string, nickname: string) => {
+  const joinRoom = useCallback((roomId: string) => {
     if (!socket) return
-    socket.emit('room:join', { roomId, nickname })
+    socket.emit('room:join', { roomId })
   }, [socket])
 
   const leaveRoom = useCallback(() => {

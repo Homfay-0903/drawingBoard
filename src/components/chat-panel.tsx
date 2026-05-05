@@ -33,11 +33,11 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage, canSend,
   const getMessageStyle = (type: 'chat' | 'system' | 'correct') => {
     switch (type) {
       case 'system':
-        return { backgroundColor: '#FFF3E0', color: '#E65100' }
+        return { backgroundColor: 'rgba(255,152,0,0.2)', color: '#FFB74D' }
       case 'correct':
-        return { backgroundColor: '#E8F5E9', color: '#2E7D32', fontWeight: 'bold' }
+        return { backgroundColor: 'rgba(76,175,80,0.2)', color: '#81C784', fontWeight: 'bold' }
       default:
-        return { backgroundColor: '#f5f5f5', color: '#333' }
+        return { backgroundColor: 'rgba(255,255,255,0.08)', color: '#e0e0e0' }
     }
   }
 
@@ -46,15 +46,17 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage, canSend,
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-      backgroundColor: '#fff',
+      backgroundColor: '#16213e',
       borderRadius: '12px',
       overflow: 'hidden',
+      border: '1px solid rgba(255,255,255,0.1)',
     }}>
       <div style={{
         padding: '12px 16px',
-        borderBottom: '1px solid #eee',
+        borderBottom: '1px solid rgba(255,255,255,0.1)',
         fontWeight: 'bold',
-        backgroundColor: '#fafafa',
+        backgroundColor: '#0f3460',
+        color: '#fff',
       }}>
         💬 聊天 / 猜词
       </div>
@@ -68,7 +70,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage, canSend,
         gap: '8px',
       }}>
         {messages.length === 0 ? (
-          <div style={{ textAlign: 'center', color: '#999', padding: '20px' }}>
+          <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', padding: '20px' }}>
             暂无消息
           </div>
         ) : (
@@ -82,7 +84,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage, canSend,
               }}
             >
               {msg.type === 'chat' && (
-                <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
+                <span style={{ fontWeight: 'bold', marginRight: '8px', color: '#90CAF9' }}>
                   {msg.playerName}:
                 </span>
               )}
@@ -93,7 +95,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage, canSend,
         <div ref={messagesEndRef} />
       </div>
 
-      <div style={{ padding: '12px', borderTop: '1px solid #eee' }}>
+      <div style={{ padding: '12px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
         <div style={{ display: 'flex', gap: '8px' }}>
           <input
             type="text"
@@ -105,11 +107,12 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage, canSend,
             style={{
               flex: 1,
               padding: '10px 12px',
-              border: '2px solid #ddd',
+              border: '1px solid rgba(255,255,255,0.2)',
               borderRadius: '8px',
               fontSize: '14px',
               outline: 'none',
-              backgroundColor: canSend ? '#fff' : '#f5f5f5',
+              backgroundColor: canSend ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
+              color: '#fff',
             }}
           />
           <button
@@ -117,7 +120,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, onSendMessage, canSend,
             disabled={!canSend || !input.trim()}
             style={{
               padding: '10px 16px',
-              backgroundColor: canSend && input.trim() ? '#2196F3' : '#ccc',
+              backgroundColor: canSend && input.trim() ? '#2196F3' : '#555',
               color: '#fff',
               border: 'none',
               borderRadius: '8px',

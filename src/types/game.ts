@@ -15,6 +15,7 @@ export interface DrawingElement {
 
 export interface PlayerData {
   id: string
+  userId: number
   nickname: string
   avatar: string
   score: number
@@ -52,4 +53,19 @@ export interface ChatMessageData {
   content: string
   type: 'chat' | 'system' | 'correct'
   timestamp: number
+}
+
+export interface UserData {
+  id: number
+  username: string
+  nickname: string
+  avatar: string
+  totalScore: number
+  gamesPlayed: number
+  gamesWon: number
+}
+
+export interface AuthResponse {
+  user: UserData
+  token: string
 }

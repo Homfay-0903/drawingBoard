@@ -20,7 +20,7 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   'room:create': (data: { name: string; maxPlayers: number }) => void
-  'room:join': (data: { roomId: string; nickname: string }) => void
+  'room:join': (data: { roomId: string }) => void
   'room:leave': (data: { roomId: string }) => void
   'room:ready': (data: { roomId: string }) => void
   'game:start': (data: { roomId: string }) => void

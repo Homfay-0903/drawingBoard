@@ -14,19 +14,19 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ players, title = '排行榜' })
       case 0: return { backgroundColor: '#FFD700', color: '#000' }
       case 1: return { backgroundColor: '#C0C0C0', color: '#000' }
       case 2: return { backgroundColor: '#CD7F32', color: '#fff' }
-      default: return { backgroundColor: '#e0e0e0', color: '#333' }
+      default: return { backgroundColor: 'rgba(255,255,255,0.15)', color: '#fff' }
     }
   }
 
   return (
     <div style={{
-      backgroundColor: '#fff',
+      backgroundColor: '#0f3460',
       borderRadius: '12px',
       padding: '16px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+      border: '1px solid rgba(255,255,255,0.1)',
     }}>
-      <h3 style={{ margin: '0 0 16px 0', textAlign: 'center' }}>{title}</h3>
-      
+      <h3 style={{ margin: '0 0 16px 0', textAlign: 'center', color: '#fff' }}>{title}</h3>
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {sortedPlayers.map((player, index) => (
           <div
@@ -36,7 +36,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ players, title = '排行榜' })
               alignItems: 'center',
               gap: '12px',
               padding: '8px 12px',
-              backgroundColor: '#f9f9f9',
+              backgroundColor: 'rgba(255,255,255,0.05)',
               borderRadius: '8px',
             }}
           >
@@ -53,16 +53,16 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ players, title = '排行榜' })
             }}>
               {index + 1}
             </span>
-            
+
             <span style={{ fontSize: '20px' }}>{player.avatar}</span>
-            
-            <span style={{ flex: 1, fontWeight: index < 3 ? 'bold' : 'normal' }}>
+
+            <span style={{ flex: 1, fontWeight: index < 3 ? 'bold' : 'normal', color: '#fff' }}>
               {player.nickname}
             </span>
-            
+
             <span style={{
               fontWeight: 'bold',
-              color: '#4CAF50',
+              color: '#81C784',
               fontSize: '16px',
             }}>
               {player.score}分
